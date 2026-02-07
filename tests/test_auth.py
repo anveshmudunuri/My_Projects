@@ -77,6 +77,30 @@ def test_me_authenticated(client):
     assert data["email"] == "alice@example.com"
 
 
+def test_register_username_too_short(client):
+    response = client.post(
+        "/auth/register",
+        json={"username": "ab", "email": "ab@example.com", "password": "secret123"},
+    )
+    assert response.status_code == 422
+
+
+def test_register_username_invalid_chars(client):
+    response = client.post(
+        "/auth/register",
+        json={"username": "al!ce", "email": "alice@example.com", "password": "secret123"},
+    )
+    assert response.status_code == 422
+
+
+def test_register_password_too_short(client):
+    response = client.post(
+        "/auth/register",
+        json={"username": "alice", "email": "alice@example.com", "password": "short"},
+    )
+    assert response.status_code == 422
+
+
 def test_register_invalid_email(client):
     response = client.post(
         "/auth/register",
