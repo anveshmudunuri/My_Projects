@@ -9,6 +9,7 @@ A REST API built with FastAPI featuring JWT token-based authentication, SQLAlche
 | GET    | `/health`        | No   | Health check       |
 | POST   | `/auth/register` | No   | Create new user    |
 | POST   | `/auth/login`    | No   | Get JWT token      |
+| POST   | `/auth/refresh`  | Yes  | Refresh JWT token  |
 | GET    | `/auth/me`       | Yes  | Get current user   |
 
 ## Setup
@@ -44,10 +45,10 @@ src/
 ├── schemas.py               # Pydantic request/response schemas
 ├── auth.py                  # Password hashing, JWT create/verify
 └── routes/
-    └── auth_routes.py       # Register, login, /me endpoints
+    └── auth_routes.py       # Register, login, refresh, /me endpoints
 tests/
 ├── conftest.py              # Test client fixture, in-memory SQLite
-└── test_auth.py             # 7 tests covering all endpoints
+└── test_auth.py             # 13 tests covering all endpoints
 ```
 
 ## Configuration
