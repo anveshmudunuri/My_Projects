@@ -1,3 +1,6 @@
+# Database
+*.db
+
 # Virtual environments
 venv/
 .venv/
