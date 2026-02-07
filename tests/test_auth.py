@@ -77,6 +77,14 @@ def test_me_authenticated(client):
     assert data["email"] == "alice@example.com"
 
 
+def test_register_invalid_email(client):
+    response = client.post(
+        "/auth/register",
+        json={"username": "alice", "email": "not-an-email", "password": "secret123"},
+    )
+    assert response.status_code == 422
+
+
 def test_me_unauthenticated(client):
     response = client.get("/auth/me")
     assert response.status_code == 401
