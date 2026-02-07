@@ -55,6 +55,14 @@ def refresh_token(current_user: User = Depends(get_current_user)):
     return {"access_token": access_token, "token_type": "bearer"}
 
 
+@router.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
+def delete_account(
+    current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
+):
+    db.delete(current_user)
+    db.commit()
+
+
 @router.get("/me", response_model=UserResponse)
 def read_current_user(current_user: User = Depends(get_current_user)):
     return current_user

@@ -102,6 +102,34 @@ def test_refresh_token_unauthenticated(client):
     assert response.status_code == 401
 
 
+def test_delete_account(client):
+    client.post(
+        "/auth/register",
+        json={"username": "alice", "email": "alice@example.com", "password": "secret123"},
+    )
+    login_response = client.post(
+        "/auth/login",
+        data={"username": "alice", "password": "secret123"},
+    )
+    token = login_response.json()["access_token"]
+    response = client.delete(
+        "/auth/me",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert response.status_code == 204
+    # Verify account is gone — token should no longer work
+    response = client.get(
+        "/auth/me",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert response.status_code == 401
+
+
+def test_delete_account_unauthenticated(client):
+    response = client.delete("/auth/me")
+    assert response.status_code == 401
+
+
 def test_register_username_too_short(client):
     response = client.post(
         "/auth/register",
