@@ -77,6 +77,31 @@ def test_me_authenticated(client):
     assert data["email"] == "alice@example.com"
 
 
+def test_refresh_token(client):
+    client.post(
+        "/auth/register",
+        json={"username": "alice", "email": "alice@example.com", "password": "secret123"},
+    )
+    login_response = client.post(
+        "/auth/login",
+        data={"username": "alice", "password": "secret123"},
+    )
+    token = login_response.json()["access_token"]
+    response = client.post(
+        "/auth/refresh",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert "access_token" in data
+    assert data["token_type"] == "bearer"
+
+
+def test_refresh_token_unauthenticated(client):
+    response = client.post("/auth/refresh")
+    assert response.status_code == 401
+
+
 def test_register_username_too_short(client):
     response = client.post(
         "/auth/register",

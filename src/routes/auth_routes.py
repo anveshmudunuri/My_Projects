@@ -49,6 +49,12 @@ def login(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
+@router.post("/refresh", response_model=Token)
+def refresh_token(current_user: User = Depends(get_current_user)):
+    access_token = create_access_token(data={"sub": current_user.username})
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
 @router.get("/me", response_model=UserResponse)
 def read_current_user(current_user: User = Depends(get_current_user)):
     return current_user
